@@ -1,0 +1,36 @@
+name: Generate Vehicle Lineart Schematics
+
+on:
+  push:
+    branches:
+      - main  # Runs every time you push new originals to the main branch
+    paths:
+      - 'images/generations/**' # Trigger only if files in generations folder change
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: npm install sharp # Installs image processing library
+
+    - name: Run filter generator
+      run: node generate-lineart.js # Runs the generator script
+
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add images/generations/lineart/
+        # Commit only if there are new generated lineart images
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto-generated lineart schematics"
+        git push
