@@ -6,6 +6,7 @@ on:
       - main  # Runs every time you push new originals to the main branch
     paths:
       - 'images/generations/**' # Trigger only if files in generations folder change
+  workflow_dispatch: # Allows manual trigger from the Actions tab on GitHub
 
 jobs:
   build:
